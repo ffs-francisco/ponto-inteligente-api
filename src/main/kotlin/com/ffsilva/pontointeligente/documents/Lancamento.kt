@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
 @Document
-data class Lacamento(
+data class Lancamento(
         @Id val id: String? = null,
 
         val data: LocalDateTime,
