@@ -8,7 +8,7 @@ interface LancamentoService {
 
     fun buscarPorFuncionarioId(funcionarioId: String, pageRequest: PageRequest): Page<Lancamento>
 
-    fun busarPorId(id: String): Lancamento?
+    fun buscarPorId(id: String): Lancamento?
 
     fun persistir(lancamento: Lancamento): Lancamento
 
