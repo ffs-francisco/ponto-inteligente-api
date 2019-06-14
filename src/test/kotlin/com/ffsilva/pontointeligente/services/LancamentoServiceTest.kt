@@ -50,7 +50,7 @@ class LancamentoServiceTest {
 
     @Test
     fun testBuscarLancamentoPorId() {
-        val lancamento: Lancamento? = lancamentoService?.busarPorId(id)
+        val lancamento: Lancamento? = lancamentoService?.buscarPorId(id)
         Assert.assertNotNull(lancamento)
     }
 
