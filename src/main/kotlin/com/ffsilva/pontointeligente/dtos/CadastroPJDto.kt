@@ -28,7 +28,7 @@ data class CadastroPJDto(
 
         @get:NotBlank(message = "CNPJ não pode vazio.")
         @get:CNPJ(message = "CNPJ inválido.")
-        val cnpf: String = "",
+        internal val cnpj: String = "",
 
         @get:NotBlank(message = "Razão social não pode ser vazia.")
         @get:Length(min = 5, max = 200, message = "Razão social deve conter entre 5 e 200 caracteres.")
