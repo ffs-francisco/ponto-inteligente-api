@@ -28,18 +28,18 @@ class CadastroPFController(
     fun cadastrar(@Valid @RequestBody cadastroPFDto: CadastroPFDto, result: BindingResult): ResponseEntity<Response<CadastroPFDto>> {
         val response: Response<CadastroPFDto> = Response()
 
-        val empresa: Empresa? = empresaService.buscarPorCnpj(cadastroPFDto.cnpj)
-        validarDadosExistentes(cadastroPFDto, empresa, result)
+        val empresa = empresaService.buscarPorCnpj(cadastroPFDto.cnpj)
+        validarDadosExistentes(cadastroPFDto, empresa.get(), result)
 
         if (result.hasErrors()) {
             result.allErrors.forEach { response.errors.add(it.defaultMessage.toString()) }
             return ResponseEntity.badRequest().body(response)
         }
 
-        var funcionario: Funcionario = converterDtoParaFuncionario(cadastroPFDto, empresa!!)
+        var funcionario: Funcionario = converterDtoParaFuncionario(cadastroPFDto, empresa.get())
         funcionario = funcionarioService.persistir(funcionario)
 
-        response.data = converterCadastroDtoTo(funcionario, empresa)
+        response.data = converterCadastroDtoTo(funcionario, empresa.get())
         return ResponseEntity.ok(response)
     }
 

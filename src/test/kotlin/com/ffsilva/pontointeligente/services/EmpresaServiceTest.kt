@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit4.SpringRunner
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -27,14 +28,14 @@ class EmpresaServiceTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        BDDMockito.given(empresaRepository?.findByCnpj(CNPJ)).willReturn(empresa())
+        BDDMockito.given(empresaRepository?.findByCnpj(CNPJ)).willReturn(Optional.of(empresa()))
         BDDMockito.given(empresaRepository?.save(empresa())).willReturn(empresa())
     }
 
     @Test
     fun testBuscarEmpresaPorCnpj() {
-        val empresa: Empresa? = empresaService?.buscarPorCnpj(CNPJ)
-        Assert.assertNotNull(empresa)
+        val empresa: Optional<Empresa> = empresaService?.buscarPorCnpj(CNPJ)!!
+        Assert.assertTrue(empresa.isPresent)
     }
 
     @Test
