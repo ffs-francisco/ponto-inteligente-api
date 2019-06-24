@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
+import java.util.*
 import javax.validation.Valid
 
 @RestController
@@ -127,7 +128,7 @@ class LancamentoController(
 
     private fun converterLancamentoDtoParaLancamento(lancamentoDto: LancamentoDto, result: BindingResult): Lancamento {
         if (lancamentoDto.id != null) {
-            if (lancamentoService.buscarPorId(lancamentoDto.id!!) == null)
+            if (!lancamentoService.buscarPorId(lancamentoDto.id!!).isPresent)
                 result.addError(ObjectError("lancamento", "Lançamento não encontrado."))
         }
 
@@ -147,8 +148,8 @@ class LancamentoController(
             return
         }
 
-        val funcionario: Funcionario? = funcionarioService.buscarPorId(lancamentoDto.funcionarioId)
-        if (funcionario == null) {
+        val funcionario: Optional<Funcionario> = funcionarioService.buscarPorId(lancamentoDto.funcionarioId)
+        if (!funcionario.isPresent) {
             result.addError(ObjectError("funcioanrio", "Funcinário não encontrado. ID inexistente."))
         }
     }

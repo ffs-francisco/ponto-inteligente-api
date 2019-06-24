@@ -4,6 +4,7 @@ import com.ffsilva.pontointeligente.documents.Funcionario
 import com.ffsilva.pontointeligente.repostories.FuncionarioRepository
 import com.ffsilva.pontointeligente.services.FuncionarioService
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class FuncionarioServiceImpl(
@@ -16,5 +17,5 @@ class FuncionarioServiceImpl(
 
     override fun buscarPorEmail(email: String): Funcionario? = funcionarioRepository.findByEmail(email)
 
-    override fun buscarPorId(id: String): Funcionario? = funcionarioRepository.findById(id).get()
+    override fun buscarPorId(id: String): Optional<Funcionario> = funcionarioRepository.findById(id)
 }

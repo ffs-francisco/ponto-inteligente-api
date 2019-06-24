@@ -51,8 +51,6 @@ class LancamentoControllerTest {
     @WithMockUser
     fun testCadastrarLancamento() {
         val lancamento: Lancamento = obterDadosLancamento()
-
-        BDDMockito.given<Funcionario>(funcionarioService?.buscarPorId(idFuncionario)).willReturn(funcionario())
         BDDMockito.given(lancamentoService?.persistir(obterDadosLancamento())).willReturn(lancamento)
 
         mvc!!.perform(MockMvcRequestBuilders.post(urlBase)
@@ -64,14 +62,14 @@ class LancamentoControllerTest {
                 .andExpect(jsonPath("$.data.tipo").value(tipo))
                 .andExpect(jsonPath("$.data.data").value(data.toString()))
                 .andExpect(jsonPath("$.data.funcionarioId").value(idFuncionario))
-                .andExpect(jsonPath("$.erros").isEmpty())
+                .andExpect(jsonPath("$.erros").isEmpty)
     }
 
     @Test
     @Throws(Exception::class)
     @WithMockUser
     fun testCadastrarLancamentoFuncionarioIdInvalido() {
-        BDDMockito.given<Funcionario>(funcionarioService?.buscarPorId(idFuncionario)).willReturn(null)
+        BDDMockito.given(funcionarioService?.buscarPorId(idFuncionario)).willReturn(Optional.empty())
 
         mvc!!.perform(MockMvcRequestBuilders.post(urlBase)
                 .content(obterJsonRequisicaoPost())
@@ -80,12 +78,12 @@ class LancamentoControllerTest {
         )
                 .andExpect(status().isBadRequest)
                 .andExpect(jsonPath("$.erros").value("Funcionário não encontrado. ID inexistente."))
-                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.data").isEmpty)
     }
 
     @Test
     @Throws(Exception::class)
-    @WithMockUser(username = "admin@admin.com", roles = arrayOf("ADMIN"))
+    @WithMockUser(username = "admin@admin.com", roles = ["ADMIN"])
     fun testRemoverLancamento() {
         BDDMockito.given(lancamentoService?.buscarPorId(idLancamento)).willReturn(Optional.of(obterDadosLancamento()))
 
