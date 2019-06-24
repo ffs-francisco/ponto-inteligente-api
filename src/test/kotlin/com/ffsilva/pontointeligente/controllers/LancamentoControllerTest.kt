@@ -7,8 +7,8 @@ import com.ffsilva.pontointeligente.documents.Lancamento
 import com.ffsilva.pontointeligente.dtos.LancamentoDto
 import com.ffsilva.pontointeligente.enums.PerfilEnum
 import com.ffsilva.pontointeligente.enums.TipoEnum
-import com.ffsilva.pontointeligente.services.FuncionarioService
-import com.ffsilva.pontointeligente.services.LancamentoService
+import com.ffsilva.pontointeligente.services.impl.FuncionarioServiceImpl
+import com.ffsilva.pontointeligente.services.impl.LancamentoServiceImpl
 import com.ffsilva.pontointeligente.utils.SenhaUtils
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 import java.util.*
 
-@SpringBootTest(classes = [FuncionarioService::class, LancamentoService::class])
+@SpringBootTest
 @AutoConfigureMockMvc
 @RunWith(SpringRunner::class)
 class LancamentoControllerTest {
@@ -36,9 +36,9 @@ class LancamentoControllerTest {
     private val mvc: MockMvc? = null
 
     @MockBean
-    private val funcionarioService: FuncionarioService? = null
+    private val funcionarioService: FuncionarioServiceImpl? = null
     @MockBean
-    private val lancamentoService: LancamentoService? = null
+    private val lancamentoService: LancamentoServiceImpl? = null
 
     private val urlBase: String = "/api/lancamentos/"
     private val idFuncionario: String = "1"
@@ -51,6 +51,7 @@ class LancamentoControllerTest {
     @WithMockUser
     fun testCadastrarLancamento() {
         val lancamento: Lancamento = obterDadosLancamento()
+        BDDMockito.given(funcionarioService?.buscarPorId(idFuncionario)).willReturn(Optional.of(funcionario()))
         BDDMockito.given(lancamentoService?.persistir(obterDadosLancamento())).willReturn(lancamento)
 
         mvc!!.perform(MockMvcRequestBuilders.post(urlBase)
@@ -62,7 +63,7 @@ class LancamentoControllerTest {
                 .andExpect(jsonPath("$.data.tipo").value(tipo))
                 .andExpect(jsonPath("$.data.data").value(data.toString()))
                 .andExpect(jsonPath("$.data.funcionarioId").value(idFuncionario))
-                .andExpect(jsonPath("$.erros").isEmpty)
+                .andExpect(jsonPath("$.errors").isEmpty)
     }
 
     @Test
@@ -77,7 +78,7 @@ class LancamentoControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isBadRequest)
-                .andExpect(jsonPath("$.erros").value("Funcionário não encontrado. ID inexistente."))
+                .andExpect(jsonPath("$.errors").value("Funcionário não encontrado. ID inexistente."))
                 .andExpect(jsonPath("$.data").isEmpty)
     }
 

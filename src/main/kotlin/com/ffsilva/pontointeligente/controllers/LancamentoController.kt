@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.BindingResult
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.*
@@ -98,6 +99,7 @@ class LancamentoController(
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     fun remover(@PathVariable("id") id: String): ResponseEntity<Response<String>> {
         val response: Response<String> = Response()
 
@@ -133,7 +135,7 @@ class LancamentoController(
         }
 
         return Lancamento(
-                id = lancamentoDto.id!!,
+                id = lancamentoDto.id,
                 data = LocalDateTime.parse(lancamentoDto.data),
                 tipo = TipoEnum.valueOf(lancamentoDto.tipo!!),
                 descricao = lancamentoDto.descricao,
@@ -150,7 +152,7 @@ class LancamentoController(
 
         val funcionario: Optional<Funcionario> = funcionarioService.buscarPorId(lancamentoDto.funcionarioId)
         if (!funcionario.isPresent) {
-            result.addError(ObjectError("funcioanrio", "Funcinário não encontrado. ID inexistente."))
+            result.addError(ObjectError("funcioanrio", "Funcionário não encontrado. ID inexistente."))
         }
     }
 }
