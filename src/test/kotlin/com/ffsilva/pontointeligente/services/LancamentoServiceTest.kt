@@ -35,11 +35,9 @@ class LancamentoServiceTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        BDDMockito.given<Page<Lancamento>>(lancamentoRepository?.findByFuncionarioId(id, PageRequest.of(0, 10)))
-                .willReturn(PageImpl(ArrayList<Lancamento>()))
+        BDDMockito.given<Page<Lancamento>>(lancamentoRepository?.findByFuncionarioId(id, PageRequest.of(0, 10))).willReturn(PageImpl(mutableListOf()))
         BDDMockito.given(lancamentoRepository?.findById(id)).willReturn(Optional.of(lancamento()))
-        BDDMockito.given(lancamentoRepository?.save(Mockito.any(Lancamento::class.java)))
-                .willReturn(lancamento())
+        BDDMockito.given(lancamentoRepository?.save(Mockito.any(Lancamento::class.java))).willReturn(lancamento())
     }
 
     @Test
