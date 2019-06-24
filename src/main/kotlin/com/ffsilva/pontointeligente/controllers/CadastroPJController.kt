@@ -72,7 +72,7 @@ class CadastroPJController(
     }
 
     private fun validarDadosExistentes(cadastroPJDto: CadastroPJDto, result: BindingResult) {
-        if (empresaService.buscarPorCnpj(cadastroPJDto.cnpj) != null)
+        if (empresaService.buscarPorCnpj(cadastroPJDto.cnpj).isPresent)
             result.addError(ObjectError("empresa", "Empresa já existente."))
 
         if (funcionarioService.buscarPorCpf(cadastroPJDto.cpf) != null)
